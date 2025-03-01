@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matrix Falling Code</title>
+    <title>CodeX </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
@@ -27,6 +27,8 @@
     <script type="text/babel">
         function MatrixEffect() {
             const canvasRef = React.useRef(null);
+            const colors = ["#5B3A29", "#8B0000", "#FF1493", "#00FF00", "#1E90FF"]; // Deep Brown, Deep Red, Deep Pink, Green, Blue
+            let colorIndex = 0;
 
             React.useEffect(() => {
                 const canvas = canvasRef.current;
@@ -35,21 +37,21 @@
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
 
-                const columns = Math.floor(canvas.width / 20);
+                const columns = Math.floor(canvas.width / 14); // Smaller font
                 const drops = Array(columns).fill(1);
                 const characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
                 function drawMatrix() {
-                    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+                    ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                    ctx.fillStyle = "#0F0";
-                    ctx.font = "18px monospace";
+                    ctx.fillStyle = colors[colorIndex];
+                    ctx.font = "12px monospace"; // Smaller font
 
                     for (let i = 0; i < drops.length; i++) {
                         const text = characters[Math.floor(Math.random() * characters.length)];
-                        const x = i * 20;
-                        const y = drops[i] * 20;
+                        const x = i * 14;
+                        const y = drops[i] * 14;
 
                         ctx.fillText(text, x, y);
 
@@ -60,9 +62,17 @@
                     }
                 }
 
-                const interval = setInterval(drawMatrix, 50);
+                function changeColor() {
+                    colorIndex = (colorIndex + 1) % colors.length;
+                }
+
+                const matrixInterval = setInterval(drawMatrix, 50);
+                const colorInterval = setInterval(changeColor, 3000); // Smooth transition every 3 seconds
                 
-                return () => clearInterval(interval);
+                return () => {
+                    clearInterval(matrixInterval);
+                    clearInterval(colorInterval);
+                };
             }, []);
 
             return <canvas ref={canvasRef}></canvas>;
