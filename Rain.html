@@ -27,7 +27,7 @@
     <script type="text/babel">
         function MatrixEffect() {
             const canvasRef = React.useRef(null);
-            const colors = ["#5B3A29", "#8B0000", "#FF1493", "#00FF00", "#1E90FF"]; // Deep Brown, Deep Red, Deep Pink, Green, Blue
+            const colors = ["#8B0000", "#00FF00", "#1E90FF"];
             let colorIndex = 0;
 
             React.useEffect(() => {
@@ -37,7 +37,7 @@
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
 
-                const columns = Math.floor(canvas.width / 14); // Smaller font
+                const columns = Math.floor(canvas.width / 14);
                 const drops = Array(columns).fill(1);
                 const characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -46,7 +46,7 @@
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                     ctx.fillStyle = colors[colorIndex];
-                    ctx.font = "12px monospace"; // Smaller font
+                    ctx.font = "15px monospace";
 
                     for (let i = 0; i < drops.length; i++) {
                         const text = characters[Math.floor(Math.random() * characters.length)];
