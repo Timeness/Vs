@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soumo | Principal Engineer</title>
+    <meta name="description" content="Enterprise-grade solutions architect and full-stack engineer">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Signika:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="font-signika bg-gray-900 text-gray-100 overflow-x-hidden">
+    <div id="app" class="relative">
+        <!-- Three.js Container -->
+        <div ref="threeContainer" class="fixed inset-0 -z-10 opacity-80"></div>
+
+        <!-- Navigation -->
+        <nav class="fixed w-full py-6 px-12 backdrop-blur-lg border-b border-white/10">
+            <div class="flex justify-between items-center">
+                <span class="text-2xl font-bold">SOUMO</span>
+                <div class="space-x-8">
+                    <a v-for="nav in navigation" class="hover:text-blue-400 transition">{{ nav }}</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="min-h-screen flex items-center px-12 pt-24">
+            <div class="max-w-6xl w-full flex items-center justify-between">
+                <div class="flex-1">
+                    <h1 class="text-6xl font-bold mb-6 leading-tight">
+                        Architecting<br>
+                        <span class="text-blue-400">Digital Excellence</span>
+                    </h1>
+                    <p class="text-xl text-gray-400 mb-8 max-w-xl">
+                        Senior full-stack engineer specializing in high-performance web applications
+                        and enterprise-scale solutions.
+                    </p>
+                    <button class="px-8 py-4 bg-blue-500 rounded-lg hover:bg-blue-600 transition">
+                        Explore Portfolio <i class="ml-2 fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="w-[600px] h-[600px] relative">
+                    <!-- 3D Orb Container -->
+                    <div ref="orbContainer" class="absolute inset-0"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Stack Section -->
+        <section class="py-32 px-12 bg-gradient-to-r from-blue-900/30 to-purple-900/30">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-4xl font-bold mb-16">Technical Expertise</h2>
+                <div class="grid grid-cols-4 gap-8">
+                    <div v-for="tech in techStack" 
+                         class="p-8 rounded-xl bg-white/5 backdrop-blur-lg hover:bg-white/10 transition">
+                        <i :class="tech.icon" class="text-4xl mb-4 text-blue-400"></i>
+                        <h3 class="text-xl font-bold mb-2">{{ tech.name }}</h3>
+                        <p class="text-gray-400">{{ tech.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Showcase -->
+        <section class="py-32 px-12">
+            <div class="max-w-6xl mx-auto">
+                <div class="flex gap-12 items-center mb-24">
+                    <div class="flex-1">
+                        <h2 class="text-4xl font-bold mb-6">Enterprise E-commerce Platform</h2>
+                        <p class="text-gray-400 mb-8">Scalable solution handling 10k+ TPS with microservices architecture</p>
+                        <button class="text-blue-400 flex items-center">
+                            View Case Study <i class="ml-2 fas fa-external-link-alt"></i>
+                        </button>
+                    </div>
+                    <div class="w-[600px] h-[400px] bg-white/5 rounded-xl backdrop-blur-lg">
+                        <!-- 3D Project Visualization -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const { createApp, ref, onMounted } = Vue;
+
+        createApp({
+            setup() {
+                const threeContainer = ref(null);
+                const orbContainer = ref(null);
+                let scene, camera, renderer, composer, orb, controls;
+
+                return { threeContainer, orbContainer };
+            },
+            data() {
+                return {
+                    navigation: ['Work', 'Expertise', 'Insights', 'Contact'],
+                    techStack: [
+                        {
+                            name: 'Cloud Architecture',
+                            icon: 'fas fa-cloud',
+                            description: 'AWS/GCP certified solutions'
+                        },
+                        {
+                            name: 'WebGL Expertise',
+                            icon: 'fas fa-cube',
+                            description: 'High-performance 3D visuals'
+                        },
+                        {
+                            name: 'Blockchain',
+                            icon: 'fas fa-link',
+                            description: 'Smart contract development'
+                        },
+                        {
+                            name: 'Machine Learning',
+                            icon: 'fas fa-brain',
+                            description: 'AI integration specialist'
+                        }
+                    ]
+                }
+            },
+            mounted() {
+                this.initThreeScene();
+                this.initOrbScene();
+                this.initScrollEffects();
+            },
+            methods: {
+                initThreeScene() {
+                    // Main background scene
+                    scene = new THREE.Scene();
+                    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                    this.threeContainer.appendChild(renderer.domElement);
+
+                    // Add floating geometric elements
+                    const geometry = new THREE.IcosahedronGeometry(2, 1);
+                    const material = new THREE.MeshStandardMaterial({
+                        color: 0x3b82f6,
+                        wireframe: true,
+                        opacity: 0.2,
+                        transparent: true
+                    });
+
+                    for(let i = 0; i < 20; i++) {
+                        const mesh = new THREE.Mesh(geometry, material);
+                        mesh.position.set(
+                            Math.random() * 100 - 50,
+                            Math.random() * 100 - 50,
+                            Math.random() * 100 - 50
+                        );
+                        mesh.rotation.set(
+                            Math.random() * Math.PI,
+                            Math.random() * Math.PI,
+                            Math.random() * Math.PI
+                        );
+                        scene.add(mesh);
+                    }
+
+                    // Add ambient lighting
+                    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+                    scene.add(ambientLight);
+
+                    camera.position.z = 50;
+                    controls = new THREE.OrbitControls(camera, renderer.domElement);
+                    controls.enableZoom = false;
+                },
+                initOrbScene() {
+                    // Central orb scene
+                    const orbScene = new THREE.Scene();
+                    const orbCamera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
+                    const orbRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                    orbRenderer.setSize(600, 600);
+                    this.orbContainer.appendChild(orbRenderer.domElement);
+
+                    // Create main orb
+                    const geometry = new THREE.SphereGeometry(4, 64, 64);
+                    const material = new THREE.MeshPhysicalMaterial({
+                        color: 0x3b82f6,
+                        metalness: 0.8,
+                        roughness: 0.3,
+                        transparent: true,
+                        opacity: 0.9
+                    });
+                    orb = new THREE.Mesh(geometry, material);
+                    orbScene.add(orb);
+
+                    // Add orbital particles
+                    const particleGeometry = new THREE.BufferGeometry();
+                    const particlePositions = [];
+                    for(let i = 0; i < 1000; i++) {
+                        particlePositions.push(
+                            (Math.random() - 0.5) * 10,
+                            (Math.random() - 0.5) * 10,
+                            (Math.random() - 0.5) * 10
+                        );
+                    }
+                    particleGeometry.setAttribute('position', new THREE.Float32BufferAttribute(particlePositions, 3));
+                    const particleMaterial = new THREE.PointsMaterial({
+                        size: 0.05,
+                        color: 0xffffff,
+                        transparent: true
+                    });
+                    const particles = new THREE.Points(particleGeometry, particleMaterial);
+                    orb.add(particles);
+
+                    orbCamera.position.z = 10;
+
+                    // Animation loop
+                    const animateOrb = () => {
+                        requestAnimationFrame(animateOrb);
+                        orb.rotation.y += 0.002;
+                        particles.rotation.x += 0.001;
+                        orbRenderer.render(orbScene, orbCamera);
+                    };
+                    animateOrb();
+                },
+                initScrollEffects() {
+                    let scrollTimeout;
+                    window.addEventListener('scroll', () => {
+                        clearTimeout(scrollTimeout);
+                        const scroll = window.scrollY;
+                        camera.position.y = -scroll * 0.1;
+                        controls.update();
+                        scrollTimeout = setTimeout(() => {
+                            renderer.render(scene, camera);
+                        }, 100);
+                    });
+                }
+            }
+        }).mount('#app');
+    </script>
+
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .gradient-overlay {
+            background: linear-gradient(120deg, #3b82f640 0%, #8b5cf640 100%);
+        }
+
+        .section-transition {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            background: #1f2937;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+    </style>
+</body>
+</html>
