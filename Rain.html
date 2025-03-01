@@ -61,12 +61,10 @@
                         drops[i]++;
                     }
                 }
-
                 function changeColor() {
                     colorIndex = (colorIndex + 1) % colors.length;
                 }
-
-                const matrixInterval = setInterval(drawMatrix, 50);
+                const matrixInterval = setInterval(drawMatrix, 100);
                 const colorInterval = setInterval(changeColor, 3000); // Smooth transition every 3 seconds
                 
                 return () => {
@@ -74,10 +72,8 @@
                     clearInterval(colorInterval);
                 };
             }, []);
-
             return <canvas ref={canvasRef}></canvas>;
         }
-
         function App() {
             return (
                 <div className="w-full h-screen">
@@ -85,7 +81,6 @@
                 </div>
             );
         }
-
         ReactDOM.createRoot(document.getElementById("root")).render(<App />);
     </script>
 </body>
