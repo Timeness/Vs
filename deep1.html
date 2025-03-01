@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Matrix Rain</title>
+  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    function MatrixRain() {
+      const [columns, setColumns] = React.useState([]);
+      const characters = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+      const speed = 50;
+
+      React.useEffect(() => {
+        const calculateColumns = () => {
+          const columnCount = Math.floor(window.innerWidth / 20);
+          setColumns(Array(columnCount).fill().map((_, i) => i));
+        };
+
+        calculateColumns();
+        window.addEventListener('resize', calculateColumns);
+        
+        return () => window.removeEventListener('resize', calculateColumns);
+      }, []);
+
+      React.useEffect(() => {
+        const intervals = columns.map((_, index) => {
+          return setInterval(() => {
+            const col = document.getElementById(`column-${index}`);
+            if (col) {
+              col.innerHTML = Array(Math.floor(window.innerHeight / 24))
+                .fill()
+                .map((_, i) => {
+                  const char = characters[Math.floor(Math.random() * characters.length)];
+                  return `<span class="${i === 0 ? 'text-white' : 'text-green-500 opacity-75'}" 
+                             style="opacity: ${1 - (i * 0.1)}">${char}</span>`;
+                })
+                .join('');
+            }
+          }, speed + Math.random() * 50);
+        });
+
+        return () => intervals.forEach(clearInterval);
+      }, [columns]);
+
+      return (
+        <div className="fixed inset-0 bg-black overflow-hidden">
+          {columns.map((_, index) => (
+            <div
+              key={index}
+              id={`column-${index}`}
+              className="absolute top-0 text-green-500 font-mono text-xl"
+              style={{ left: `${index * 20}px` }}
+            />
+          ))}
+        </div>
+      );
+    }
+
+    ReactDOM.render(<MatrixRain />, document.getElementById('root'));
+  </script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap');
+    body { margin: 0; overflow: hidden; }
+    .font-mono { font-family: 'Ubuntu Mono', monospace; }
+  </style>
+</body>
+</html>
