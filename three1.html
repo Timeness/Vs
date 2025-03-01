@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soumo | Technical Architect</title>
+    <meta name="description" content="Enterprise-scale solutions architect and technical leader">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Signika:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="font-signika bg-gray-950 text-gray-100 overflow-x-hidden">
+    <div id="app" class="relative">
+        <!-- 3D Network Canvas -->
+        <canvas ref="networkCanvas" class="fixed inset-0 -z-10 opacity-20"></canvas>
+
+        <!-- Main Content -->
+        <div class="relative z-10">
+            <!-- Navigation -->
+            <nav class="fixed w-full py-6 px-12 backdrop-blur-lg border-b border-white/10">
+                <div class="flex justify-between items-center">
+                    <span class="text-2xl font-bold text-blue-500">SOUMO</span>
+                    <div class="flex gap-8">
+                        <a v-for="nav in navigation" class="hover:text-blue-400 transition">{{ nav }}</a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Hero Section -->
+            <section class="min-h-screen flex items-center px-12 pt-24">
+                <div class="max-w-6xl mx-auto">
+                    <div class="flex gap-16 items-center">
+                        <div class="flex-1">
+                            <h1 class="text-6xl font-bold mb-6 leading-tight">
+                                Transforming Vision<br>
+                                <span class="text-blue-500">Into Technical Reality</span>
+                            </h1>
+                            <p class="text-xl text-gray-400 mb-8 max-w-2xl">
+                                10+ years experience architecting enterprise-grade solutions
+                                for Fortune 500 companies and high-growth startups
+                            </p>
+                            <div class="flex gap-4">
+                                <button class="px-6 py-3 bg-blue-500 rounded-lg hover:bg-blue-600 transition">
+                                    View Case Studies
+                                </button>
+                                <button class="px-6 py-3 border border-blue-500 rounded-lg hover:bg-blue-500/10 transition">
+                                    Download CV
+                                </button>
+                            </div>
+                        </div>
+                        <div class="w-[600px] h-[600px] relative">
+                            <!-- 3D Architecture Diagram -->
+                            <canvas ref="archDiagram" class="rounded-xl bg-gradient-to-br from-blue-900/30 to-purple-900/30"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Capabilities Section -->
+            <section class="py-32 px-12 bg-gradient-to-r from-blue-900/20 to-purple-900/20">
+                <div class="max-w-6xl mx-auto">
+                    <h2 class="text-4xl font-bold mb-16">Core Capabilities</h2>
+                    <div class="grid grid-cols-3 gap-8">
+                        <div v-for="capability in capabilities" 
+                             class="p-8 rounded-xl bg-white/5 backdrop-blur-lg hover:bg-white/10 transition">
+                            <div class="text-blue-500 text-3xl mb-4">
+                                <i :class="capability.icon"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">{{ capability.title }}</h3>
+                            <p class="text-gray-400">{{ capability.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <script>
+            const { createApp, ref, onMounted } = Vue;
+
+            createApp({
+                setup() {
+                    const networkCanvas = ref(null);
+                    const archDiagram = ref(null);
+                    let networkScene, networkCamera, networkRenderer, diagramScene, diagramRenderer;
+                    let networkNodes = [];
+
+                    return { networkCanvas, archDiagram };
+                },
+                data() {
+                    return {
+                        navigation: ['Expertise', 'Case Studies', 'Insights', 'Contact'],
+                        capabilities: [
+                            {
+                                title: 'System Architecture',
+                                icon: 'fas fa-network-wired',
+                                description: 'Enterprise-scale distributed systems design'
+                            },
+                            {
+                                title: 'Cloud Infrastructure',
+                                icon: 'fas fa-cloud',
+                                description: 'Multi-cloud deployment strategies'
+                            },
+                            {
+                                title: 'DevOps Engineering',
+                                icon: 'fas fa-code',
+                                description: 'CI/CD pipeline optimization'
+                            }
+                        ]
+                    }
+                },
+                mounted() {
+                    this.initNetworkScene();
+                    this.initArchDiagram();
+                    this.initScrollEffects();
+                },
+                methods: {
+                    initNetworkScene() {
+                        // Initialize main network visualization
+                        networkScene = new THREE.Scene();
+                        networkCamera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+                        networkRenderer = new THREE.WebGLRenderer({ canvas: this.networkCanvas, antialias: true });
+                        networkRenderer.setSize(window.innerWidth, window.innerHeight);
+                        
+                        // Create network nodes
+                        const nodeGeometry = new THREE.SphereGeometry(0.3, 16, 16);
+                        const nodeMaterial = new THREE.MeshBasicMaterial({ color: 0x3b82f6 });
+                        
+                        // Generate random nodes
+                        for(let i = 0; i < 200; i++) {
+                            const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+                            node.position.set(
+                                (Math.random() - 0.5) * 40,
+                                (Math.random() - 0.5) * 40,
+                                (Math.random() - 0.5) * 40
+                            );
+                            networkNodes.push(node);
+                            networkScene.add(node);
+                        }
+
+                        // Create connections
+                        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0.1 });
+                        for(let i = 0; i < 300; i++) {
+                            const points = [];
+                            points.push(networkNodes[Math.floor(Math.random()*networkNodes.length)].position);
+                            points.push(networkNodes[Math.floor(Math.random()*networkNodes.length)].position);
+                            
+                            const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+                            const line = new THREE.Line(lineGeometry, lineMaterial);
+                            networkScene.add(line);
+                        }
+
+                        networkCamera.position.z = 50;
+                        this.animateNetwork();
+                    },
+                    initArchDiagram() {
+                        // 3D architecture diagram initialization
+                        diagramScene = new THREE.Scene();
+                        const diagramCamera = new THREE.PerspectiveCamera(45, 600/600, 0.1, 1000);
+                        diagramRenderer = new THREE.WebGLRenderer({ canvas: this.archDiagram, antialias: true });
+                        diagramRenderer.setSize(600, 600);
+
+                        // Create layered architecture visualization
+                        const layers = [];
+                        const colors = [0x3b82f6, 0x6366f1, 0x8b5cf6];
+                        
+                        colors.forEach((color, i) => {
+                            const geometry = new THREE.BoxGeometry(4, 0.2, 4);
+                            const material = new THREE.MeshPhysicalMaterial({
+                                color,
+                                metalness: 0.5,
+                                roughness: 0.3,
+                                transparent: true,
+                                opacity: 0.9
+                            });
+                            const layer = new THREE.Mesh(geometry, material);
+                            layer.position.y = i * 1.5;
+                            layers.push(layer);
+                            diagramScene.add(layer);
+                        });
+
+                        // Add connecting lines
+                        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
+                        for(let i = 0; i < layers.length - 1; i++) {
+                            const points = [];
+                            points.push(new THREE.Vector3(2, layers[i].position.y, 2));
+                            points.push(new THREE.Vector3(2, layers[i+1].position.y, 2));
+                            
+                            const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+                            const line = new THREE.Line(lineGeometry, lineMaterial);
+                            diagramScene.add(line);
+                        }
+
+                        diagramCamera.position.set(8, 6, 8);
+                        diagramCamera.lookAt(0, 3, 0);
+
+                        // Animation
+                        const animateDiagram = () => {
+                            requestAnimationFrame(animateDiagram);
+                            layers.forEach((layer, i) => {
+                                layer.rotation.y += 0.005 * (i+1);
+                            });
+                            diagramRenderer.render(diagramScene, diagramCamera);
+                        };
+                        animateDiagram();
+                    },
+                    animateNetwork() {
+                        requestAnimationFrame(this.animateNetwork);
+                        networkNodes.forEach(node => {
+                            node.rotation.x += 0.01;
+                            node.rotation.y += 0.01;
+                        });
+                        networkRenderer.render(networkScene, networkCamera);
+                    },
+                    initScrollEffects() {
+                        window.addEventListener('scroll', () => {
+                            const scroll = window.scrollY;
+                            networkCamera.position.z = 50 + scroll * 0.05;
+                            networkCamera.position.y = -scroll * 0.1;
+                        });
+                    }
+                }
+            }).mount('#app');
+        </script>
+
+        <style>
+            .gradient-mask {
+                mask-image: linear-gradient(to bottom, 
+                    rgba(0,0,0,1) 80%, 
+                    rgba(0,0,0,0) 100%);
+            }
+
+            .arch-layer {
+                box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+            }
+
+            ::selection {
+                background: #3b82f6;
+                color: white;
+            }
+
+            .hover-glow {
+                transition: filter 0.3s;
+            }
+
+            .hover-glow:hover {
+                filter: drop-shadow(0 0 8px #3b82f666);
+            }
+        </style>
+    </div>
+</body>
+</html>
