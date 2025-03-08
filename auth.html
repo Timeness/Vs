@@ -1,84 +1,113 @@
+<!DOCTYPE html>
 <html lang="en">
- <head>
+<head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>Telegram Authorization</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Signika:wght@400;600&display=swap" rel="stylesheet"/>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-   body {
-     font-family: 'Signika', sans-serif;
-   }
+    body {
+      font-family: 'Signika', sans-serif;
+    }
+    /* Prevent image dragging & right-click */
+    img {
+      pointer-events: none;
+      -webkit-user-drag: none;
+      user-drag: none;
+    }
+    /* Hide content initially */
+    #content {
+      display: none;
+    }
   </style>
- </head>
- <body class="bg-black text-white">
-  <div class="max-w-md mx-auto p-4">
-   <div class="flex items-center justify-between mb-2">
-    <div class="flex items-center">
-     <i class="fas fa-lock text-gray-400"></i>
-     <span class="ml-2 text-gray-400 text-sm">Telegram.me</span>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.ready(); // Ensure WebApp is ready
+        let user = Telegram.WebApp.initDataUnsafe.user;
+        
+        if (user) {
+          document.getElementById("content").style.display = "block";
+          document.getElementById("userAvatar").src = user.photo_url || "https://via.placeholder.com/50";
+          document.getElementById("userName").innerText = user.first_name;
+        }
+      } else {
+        document.body.innerHTML = '<div class="h-screen flex items-center justify-center text-white text-lg">Open via Telegram Mini App</div>';
+      }
+    });
+  </script>
+</head>
+<body class="bg-black text-white">
+  <div id="content" class="max-w-md mx-auto p-4">
+    <div class="flex items-center justify-between mb-2">
+      <div class="flex items-center">
+        <img src="https://i.ibb.co/p6Ncy3QR/logos-telegram.png" alt="Telegram logo" class="w-6 h-6">
+        <span class="ml-2 text-white text-lg font-semibold">Telegram</span>
+        <img src="https://i.ibb.co/G33Lgwqn/material-symbols-verified-rounded.png" alt="Verified icon" class="w-5 h-5 ml-1">
+      </div>
     </div>
-   </div>
-   <hr class="border-gray-600 mb-4"/>
-   <div class="flex items-center justify-center mb-4">
-    <img alt="BonusBlock-KiteAI logo" class="rounded-full border border-gray-600" height="50" src="https://storage.googleapis.com/a1aa/image/kYAkCdv5DBMTUcBxAxZXj9iyf89YH7dUw0MovCtT6pA.jpg" width="50"/>
-    <img alt="User avatar" class="rounded-full ml-4 border border-gray-600" height="50" src="https://storage.googleapis.com/a1aa/image/DfB3cZObnffvCq2qJFQpQnvAw8SO1FrFHGuOXf-A314.jpg" width="50"/>
-   </div>
-   <div class="text-center mb-4">
-    <h1 class="text-lg font-semibold">BonusBlock-KiteAI</h1>
-    <p class="text-gray-400 text-sm">wants to access your Telegram account</p>
-    <p class="text-gray-400 text-sm">
-     Signed in as <span class="text-white">maybesreya_73172</span>
-     <a class="text-blue-500" href="#">Not you?</a>
-    </p>
-   </div>
-   <div class="bg-transparent border border-gray-600 p-4 rounded-lg mb-4">
-    <p class="text-gray-400 text-sm mb-2">This will allow the developer of BonusBlock-KiteAI to:</p>
-    <ul class="space-y-2">
-     <li class="flex items-center text-sm">
-      <i class="fas fa-check-circle text-green-500"></i>
-      <span class="ml-2 text-white">Access your username, avatar, and banner</span>
-     </li>
-     <li class="flex items-center text-sm">
-      <i class="fas fa-check-circle text-green-500"></i>
-      <span class="ml-2 text-white">Know what servers you're in</span>
-     </li>
-     <li class="flex items-center text-sm">
-      <i class="fas fa-times-circle text-red-500"></i>
-      <span class="ml-2 text-white">Solve a mystery with Scooby and the gang</span>
-     </li>
-    </ul>
-   </div>
-   <div class="text-gray-400 text-xs mb-4">
-    <p class="flex items-start mt-2">
-     <i class="fas fa-link mr-2"></i>
-     <span>
-      Once you authorize, you will be redirected <span class="font-semibold">outside of Telegram</span> to:
-      <a class="text-blue-500 block" href="https://api-kiteai.bonusblock.io">https://api-kiteai.bonusblock.io</a>
-     </span>
-    </p>
-    <p class="flex items-start mt-2">
-     <i class="fas fa-lock mr-2"></i>
-     <span>
-      The developer of BonusBlock-KiteAI's
-      <a class="text-blue-500" href="#">privacy policy</a> and
-      <a class="text-blue-500" href="#">terms of service</a> apply to this application.
-     </span>
-    </p>
-    <p class="flex items-center mt-2">
-     <i class="fas fa-calendar-alt mr-2"></i>
-     Active since Jan 25, 2025
-    </p>
-    <p class="flex items-center mt-2">
-     <i class="fas fa-shield-alt mr-2"></i>
-     This application cannot read your messages or send messages as you.
-    </p>
-   </div>
-   <div class="flex justify-end space-x-2">
-    <button class="bg-blue-600 text-white py-2 px-4 rounded-lg text-sm">Authorize</button>
-    <button class="bg-gray-700 text-white py-2 px-4 rounded-lg text-sm">Cancel</button>
-   </div>
+    <hr class="border-gray-600 mb-4"/>
+    <div class="flex items-center justify-center mb-4">
+      <img alt="BonusBlock-KiteAI logo" class="rounded-full border border-gray-600" height="50" src="https://storage.googleapis.com/a1aa/image/kYAkCdv5DBMTUcBxAxZXj9iyf89YH7dUw0MovCtT6pA.jpg" width="50"/>
+      <img id="userAvatar" alt="User avatar" class="rounded-full ml-4 border border-gray-600" height="50" width="50"/>
+    </div>
+    <div class="text-center mb-4">
+      <h1 class="text-lg font-semibold">BonusBlock-KiteAI</h1>
+      <p class="text-gray-400 text-sm">wants to access your Telegram account</p>
+      <p class="text-gray-400 text-sm">
+        Signed in as <span id="userName" class="text-white"></span>
+        <a class="text-blue-500" href="#">Not you?</a>
+      </p>
+    </div>
+    <div class="bg-transparent border border-gray-600 p-4 rounded-lg mb-4">
+      <p class="text-gray-400 text-sm mb-2">This will allow the developer of BonusBlock-KiteAI to:</p>
+      <ul class="space-y-2">
+        <li class="flex items-center text-sm">
+          <i class="fas fa-check-circle text-green-500"></i>
+          <span class="ml-2 text-white">Access your username, avatar, and banner</span>
+        </li>
+        <li class="flex items-center text-sm">
+          <i class="fas fa-check-circle text-green-500"></i>
+          <span class="ml-2 text-white">Know what servers you're in</span>
+        </li>
+        <li class="flex items-center text-sm">
+          <i class="fas fa-times-circle text-red-500"></i>
+          <span class="ml-2 text-white">Solve a mystery with Scooby and the gang</span>
+        </li>
+      </ul>
+    </div>
+    <div class="text-gray-400 text-xs mb-4">
+      <p class="flex items-start mt-2">
+        <i class="fas fa-link mr-2"></i>
+        <span>
+          Once you authorize, you will be redirected <span class="font-semibold">outside of Telegram</span> to:
+          <a class="text-blue-500 block" href="https://api-kiteai.bonusblock.io">https://api-kiteai.bonusblock.io</a>
+        </span>
+      </p>
+      <p class="flex items-start mt-2">
+        <i class="fas fa-lock mr-2"></i>
+        <span>
+          The developer of BonusBlock-KiteAI's
+          <a class="text-blue-500" href="#">privacy policy</a> and
+          <a class="text-blue-500" href="#">terms of service</a> apply to this application.
+        </span>
+      </p>
+      <p class="flex items-center mt-2">
+        <i class="fas fa-calendar-alt mr-2"></i>
+        Active since Jan 25, 2025
+      </p>
+      <p class="flex items-center mt-2">
+        <i class="fas fa-shield-alt mr-2"></i>
+        This application cannot read your messages or send messages as you.
+      </p>
+    </div>
+    <div class="flex justify-end space-x-2">
+      <button class="bg-blue-600 text-white py-2 px-4 rounded-lg text-sm">Authorize</button>
+      <button class="bg-gray-700 text-white py-2 px-4 rounded-lg text-sm">Cancel</button>
+    </div>
   </div>
- </body>
+</body>
 </html>
