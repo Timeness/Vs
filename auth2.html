@@ -7,34 +7,37 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Signika:wght@400;600&display=swap" rel="stylesheet"/>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body {
       font-family: 'Signika', sans-serif;
     }
-    /* Prevents image dragging, right-click, and inspection */
+    /* Prevent image dragging & right-click */
     img {
       pointer-events: none;
       -webkit-user-drag: none;
       user-drag: none;
     }
-    /* Hide content if opened outside Telegram Mini App */
+    /* Hide content initially */
     #content {
       display: none;
     }
   </style>
   <script>
-    window.onload = function() {
-      if (window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe) {
-        document.getElementById("content").style.display = "block";
+    document.addEventListener("DOMContentLoaded", function() {
+      if (window.Telegram && Telegram.WebApp) {
+        Telegram.WebApp.ready(); // Ensure WebApp is ready
         let user = Telegram.WebApp.initDataUnsafe.user;
+        
         if (user) {
+          document.getElementById("content").style.display = "block";
           document.getElementById("userAvatar").src = user.photo_url || "https://via.placeholder.com/50";
           document.getElementById("userName").innerText = user.first_name;
         }
       } else {
         document.body.innerHTML = '<div class="h-screen flex items-center justify-center text-white text-lg">Open via Telegram Mini App</div>';
       }
-    };
+    });
   </script>
 </head>
 <body class="bg-black text-white">
