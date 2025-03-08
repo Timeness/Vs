@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Telegram</title>
+    <title>Open Telegram in Chrome</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,6 +18,7 @@
             border: none;
             cursor: pointer;
             border-radius: 5px;
+            cursor: pointer;
         }
         button:hover {
             background-color: #0077b6;
@@ -26,12 +27,25 @@
 </head>
 <body>
 
-    <h2>Open Telegram Website</h2>
+    <h2>Open Telegram in Chrome</h2>
     <button onclick="openTelegram()">Open Telegram</button>
 
     <script>
         function openTelegram() {
-            window.open('https://telegram.org', '_blank');
+            var url = "https://telegram.org";
+            var userAgent = navigator.userAgent.toLowerCase();
+
+            if (userAgent.includes("chrome") && !userAgent.includes("edge") && !userAgent.includes("opr")) {
+                // If Chrome, open directly
+                window.location.href = url;
+            } else if (navigator.userAgent.toLowerCase().includes("android")) {
+                // If Android, use intent URL to force Chrome
+                window.location.href = "intent://" + url.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=com.android.chrome;end;";
+            } else {
+                // If not Chrome, show message
+                alert("This link is meant to open in Google Chrome.");
+                window.location.href = "https://www.google.com/chrome/";
+            }
         }
     </script>
 
