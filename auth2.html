@@ -100,7 +100,10 @@
                     document.getElementById("auth-container").classList.remove("hidden");
                     document.getElementById("not-in-telegram").classList.add("hidden");
 
-                    document.getElementById("username").textContent = tg.username ? `@${tg.username}` : tg.first_name;
+                    // User ka first name show karega
+                    document.getElementById("username").textContent = tg.first_name;
+
+                    // Agar user ka profile picture hai to wo show karega, warna default placeholder image
                     document.getElementById("user-avatar").src = tg.photo_url || "https://via.placeholder.com/50";
                 }
             } else {
