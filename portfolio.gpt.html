@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soumo | Portfolio</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Signika:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <style>
+        body {
+            font-family: 'Signika', sans-serif;
+            font-size: 14px;
+            background: linear-gradient(to right, #1e1e2f, #16213e, #1e1e2f);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="fixed w-full bg-black/80 backdrop-blur-sm z-50">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Soumo</h1>
+            <div class="hidden md:flex space-x-6">
+                <a href="#home" class="hover:text-blue-400">Home</a>
+                <a href="#about" class="hover:text-blue-400">About</a>
+                <a href="#contact" class="hover:text-blue-400">Contact</a>
+            </div>
+            <button class="md:hidden text-2xl" id="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="hidden fixed inset-0 bg-black/95 flex flex-col items-center justify-center space-y-6 text-xl z-40" id="mobile-menu">
+        <a href="#home" class="hover:text-blue-400" onclick="toggleMenu()">Home</a>
+        <a href="#about" class="hover:text-blue-400" onclick="toggleMenu()">About</a>
+        <a href="#contact" class="hover:text-blue-400" onclick="toggleMenu()">Contact</a>
+        <button class="text-3xl mt-6" onclick="toggleMenu()">✖</button>
+    </div>
+
+    <section id="home" class="min-h-screen flex items-center justify-center pt-20">
+        <div class="container mx-auto text-center" data-aos="fade-up">
+            <h1 class="text-5xl font-bold mb-6">Full Stack Developer</h1>
+            <p class="text-xl text-gray-300 mb-8">Turning ideas into exceptional digital experiences</p>
+            <div class="flex justify-center space-x-4">
+                <a href="#contact" class="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-full">Hire Me</a>
+                <a href="#" class="border border-blue-600 hover:bg-blue-600 px-8 py-3 rounded-full">Download CV</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-20 bg-black/30">
+        <div class="container mx-auto px-6" data-aos="fade-up">
+            <h2 class="text-4xl font-bold mb-12 text-center">About Me</h2>
+            <p class="text-gray-300 text-center mx-auto max-w-2xl">
+                Hi! I'm Soumo, a passionate full-stack developer with experience in building web applications using modern technologies like React, Node.js, and more.
+            </p>
+        </div>
+    </section>
+
+    <section id="contact" class="py-20">
+        <div class="container mx-auto px-6 text-center" data-aos="fade-up">
+            <h2 class="text-4xl font-bold mb-12">Get in Touch</h2>
+            <p class="text-gray-300 mb-4">Feel free to reach out for collaborations or just say hello!</p>
+            <a href="mailto:your.email@example.com" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-full">Send an Email</a>
+        </div>
+    </section>
+
+    <footer class="bg-black/80 py-6 text-center">
+        <div class="container mx-auto">
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="text-2xl hover:text-blue-400"><i class="fab fa-github"></i></a>
+                <a href="#" class="text-2xl hover:text-blue-400"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="text-2xl hover:text-blue-400"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-2xl hover:text-blue-400"><i class="fab fa-instagram"></i></a>
+            </div>
+            <p class="text-gray-400">&copy; <span id="year"></span> Soumo. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+        AOS.init();
+
+        function toggleMenu() {
+            document.getElementById("mobile-menu").classList.toggle("hidden");
+        }
+
+        document.getElementById("menu-toggle").addEventListener("click", toggleMenu);
+    </script>
+</body>
+</html>
