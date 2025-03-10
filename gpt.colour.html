@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Portfolio</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Signika:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/animate.css/animate.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Signika', sans-serif; font-size: 15px; }
+        .cool-bg { background: linear-gradient(135deg, #2b5876, #4e4376); }
+        .verified-icon, .about-icon {
+            width: 24px;
+            height: 24px;
+            user-select: none;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <nav class="bg-gray-900 text-white py-3 shadow-md">
+        <div class="container mx-auto flex justify-between items-center px-6">
+            <div class="flex items-center space-x-2">
+                <span class="text-xl font-semibold">Soumo</span>
+                <img src="https://i.ibb.co/G33Lgwq/material-symbols-verified-rounded.png" alt="Verified" class="verified-icon">
+            </div>
+            <div class="flex items-center space-x-6 text-sm">
+                <a href="#about">
+                    <img src="https://i.ibb.co/MyjcY65q/simple-icons-aboutdotme.png" alt="About Me" class="about-icon">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="text-center cool-bg text-white py-24">
+        <h1 class="text-3xl font-bold animate__animated animate__fadeInUp">Welcome to My Portfolio</h1>
+        <p class="mt-3 text-lg opacity-80">Your one-stop destination for creative solutions</p>
+    </header>
+
+    <section id="about" class="py-14 px-6 bg-white" data-aos="fade-up">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-semibold mb-5">About Me</h2>
+            <p class="text-base text-gray-600 leading-relaxed">Hi, I'm Soumo, a passionate web developer and designer. I specialize in creating beautiful, functional websites and applications using technologies like JavaScript, React, and Node.js.</p>
+            <p class="text-base text-gray-600 mt-3">Beyond coding, I focus on user experience and modern design trends to create seamless digital experiences.</p>
+        </div>
+    </section>
+
+    <footer class="bg-black/80 py-6 text-center">
+        <div class="container mx-auto">
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="text-2xl hover:text-blue-400"><i class="fab fa-github"></i></a>
+                <a href="#" class="text-2xl hover:text-blue-400"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="text-2xl hover:text-blue-400"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-2xl hover:text-blue-400"><i class="fab fa-instagram"></i></a>
+            </div>
+            <p class="text-gray-400">&copy; <span id="year"></span> Soumo. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+
+</body>
+</html>
