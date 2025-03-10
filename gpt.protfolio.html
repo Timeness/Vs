@@ -15,13 +15,22 @@
     <style>
         body { font-family: 'Signika', sans-serif; font-size: 15px; }
         .cool-bg { background: linear-gradient(135deg, #2b5876, #4e4376); }
+        .verified-icon {
+            width: 24px;
+            height: 24px;
+            user-select: none;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
 
     <nav class="bg-gray-900 text-white py-3 shadow-md">
         <div class="container mx-auto flex justify-between items-center px-6">
-            <a href="#" class="text-xl font-semibold">Soumo</a>
+            <div class="flex items-center space-x-2">
+                <span class="text-xl font-semibold">Soumo</span>
+                <img src="https://i.ibb.co/G33Lgwq/material-symbols-verified-rounded.png" alt="Verified" class="verified-icon">
+            </div>
             <div class="space-x-6 text-sm">
                 <a href="#about" class="hover:text-blue-400">About Me</a>
                 <a href="#contact" class="hover:text-blue-400">Contact</a>
@@ -46,7 +55,7 @@
         <div class="container mx-auto text-center">
             <h2 class="text-3xl font-semibold mb-5">Get in Touch</h2>
             <p class="text-base text-gray-600 mb-4">I'm always open to new opportunities. Feel free to reach out for collaborations or just to say hello!</p>
-            <a href="mailto: ayanshukun@gmail.com" class="bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-600 transition">Send an Email</a>
+            <a href="mailto:your.email@example.com" class="bg-blue-500 text-white px-5 py-2 rounded-lg hover:bg-blue-600 transition">Send an Email</a>
         </div>
     </section>
 
