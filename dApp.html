@@ -5,70 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Decentralized DApp Search</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Signika:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Signika:wght@300;400&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         body {
             font-family: 'Signika', sans-serif;
-            background: linear-gradient(135deg, #121212, #1e293b);
+            background: linear-gradient(135deg, #111827, #1e293b);
             color: white;
-        }
-        .tab-active {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        .btn {
-            padding: 8px;
-            border-radius: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-        .search-box {
-            background: rgba(255, 255, 255, 0.1);
+            font-size: 14px;
         }
     </style>
 </head>
 <body class="flex flex-col h-screen">
-    <div class="bg-gray-900 p-2 flex items-center space-x-2" id="tab-container">
-        <div class="btn" onclick="addTab()">+ New Tab</div>
+    <div class="bg-gray-900 p-2 flex items-center space-x-2 text-sm" id="tab-container">
+        <button class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-500" onclick="addTab()">+ New Tab</button>
     </div>
 
-    <div class="p-4 bg-gray-800 flex">
-        <input type="text" id="search-input" placeholder="Search..." class="flex-1 p-2 rounded search-box text-white">
-        <div class="btn ml-2" onclick="reloadTab()"><span class="material-icons">refresh</span></div>
-        <div class="btn ml-2" onclick="addToFavorites()"><span class="material-icons">star</span></div>
-        <div class="btn ml-2"><span class="material-icons">more_vert</span></div>
+    <div class="p-2 bg-gray-800 flex items-center space-x-2">
+        <input type="text" id="search-input" placeholder="Search..." 
+            class="flex-1 p-2 text-white bg-gray-700 rounded text-sm">
+        <button class="p-2 bg-green-600 text-white rounded hover:bg-green-500" onclick="reloadTab()">
+            <span class="material-icons text-sm">refresh</span>
+        </button>
+        <button class="p-2 bg-yellow-600 text-white rounded hover:bg-yellow-500" onclick="addToFavorites()">
+            <span class="material-icons text-sm">star</span>
+        </button>
+        <button class="p-2 bg-gray-600 text-white rounded hover:bg-gray-500">
+            <span class="material-icons text-sm">more_vert</span>
+        </button>
     </div>
 
-    <div class="flex-1 p-4 bg-gray-700 overflow-auto" id="tab-content"></div>
+    <div class="flex-1 p-2 bg-gray-700 overflow-auto" id="tab-content"></div>
 
-    <div class="bg-gray-900 p-2">
-        <h3 class="text-lg">Search History</h3>
-        <ul class="text-sm text-gray-400" id="search-history"></ul>
-        <h3 class="text-lg mt-2">Favorites</h3>
-        <ul class="text-sm text-yellow-400" id="favorites-list"></ul>
+    <div class="bg-gray-900 p-2 text-sm">
+        <h3 class="font-semibold">Search History</h3>
+        <ul class="text-gray-400" id="search-history"></ul>
+        <h3 class="font-semibold mt-2">Favorites</h3>
+        <ul class="text-yellow-400" id="favorites-list"></ul>
     </div>
 
     <script>
-        let tabs = [{ id: 1, url: "" }];
+        let tabs = [{ id: 1 }];
         let activeTab = 1;
         let searchHistory = [];
         let favorites = [];
 
         function updateTabs() {
             const tabContainer = document.getElementById('tab-container');
-            tabContainer.innerHTML = '<div class="btn" onclick="addTab()">+ New Tab</div>';
+            tabContainer.innerHTML = `<button class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-500" onclick="addTab()">+ New Tab</button>`;
             tabs.forEach(tab => {
-                const tabEl = document.createElement('div');
-                tabEl.className = `btn ${tab.id === activeTab ? 'tab-active' : ''}`;
-                tabEl.innerHTML = `Tab ${tab.id} <span class="material-icons text-red-500" onclick="event.stopPropagation(); closeTab(${tab.id})">close</span>`;
+                const tabEl = document.createElement('button');
+                tabEl.className = `px-3 py-1 rounded hover:bg-gray-600 ${tab.id === activeTab ? 'bg-gray-500' : 'bg-gray-700'}`;
+                tabEl.innerHTML = `Tab ${tab.id} <span class="material-icons text-red-500 text-sm" onclick="event.stopPropagation(); closeTab(${tab.id})">close</span>`;
                 tabEl.onclick = () => setActiveTab(tab.id);
                 tabContainer.appendChild(tabEl);
             });
-            updateTabContent();
         }
 
         function setActiveTab(id) {
@@ -77,27 +68,24 @@
         }
 
         function addTab() {
-            const newTab = { id: Date.now(), url: "" };
+            const newTab = { id: Date.now() };
             tabs.push(newTab);
             setActiveTab(newTab.id);
         }
 
         function closeTab(id) {
             tabs = tabs.filter(tab => tab.id !== id);
-            if (id === activeTab && tabs.length > 0) {
-                activeTab = tabs[0].id;
-            }
+            if (id === activeTab && tabs.length > 0) activeTab = tabs[0].id;
             updateTabs();
         }
 
         function handleSearch() {
-            const query = document.getElementById('search-input').value;
+            const query = document.getElementById('search-input').value.trim();
             if (!query) return;
             const searchUrl = `https://search.yahoo.com/search?p=${encodeURIComponent(query)}`;
-            tabs = tabs.map(tab => tab.id === activeTab ? { ...tab, url: searchUrl } : tab);
+            window.open(searchUrl, '_blank'); 
             searchHistory.push(query);
             updateSearchHistory();
-            updateTabs();
         }
 
         function reloadTab() {
@@ -105,23 +93,10 @@
         }
 
         function addToFavorites() {
-            const activeTabObj = tabs.find(tab => tab.id === activeTab);
-            if (activeTabObj && activeTabObj.url && !favorites.includes(activeTabObj.url)) {
-                favorites.push(activeTabObj.url);
-                updateFavorites();
-            }
-        }
-
-        function updateTabContent() {
-            const tabContent = document.getElementById('tab-content');
-            tabContent.innerHTML = '';
-            const activeTabObj = tabs.find(tab => tab.id === activeTab);
-            if (activeTabObj && activeTabObj.url) {
-                const iframe = document.createElement('iframe');
-                iframe.src = activeTabObj.url;
-                iframe.className = "w-full h-full rounded";
-                tabContent.appendChild(iframe);
-            }
+            const query = document.getElementById('search-input').value.trim();
+            if (!query || favorites.includes(query)) return;
+            favorites.push(query);
+            updateFavorites();
         }
 
         function updateSearchHistory() {
@@ -131,7 +106,7 @@
 
         function updateFavorites() {
             const favoritesList = document.getElementById('favorites-list');
-            favoritesList.innerHTML = favorites.map(url => `<li>${url}</li>`).join('');
+            favoritesList.innerHTML = favorites.map(query => `<li>${query}</li>`).join('');
         }
 
         document.getElementById('search-input').addEventListener('keydown', function(e) {
