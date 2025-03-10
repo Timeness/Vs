@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decentralized DApp Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <style>
+        body {
+            font-family: 'Signika', sans-serif;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: white;
+        }
+        .tab-active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen">
+    <div id="root" class="flex-1"></div>
+
+    <script type="text/babel">
+        function App() {
+            const [tabs, setTabs] = React.useState([{ id: 1, url: "" }]);
+            const [activeTab, setActiveTab] = React.useState(1);
+            const [searchHistory, setSearchHistory] = React.useState([]);
+            const [favorites, setFavorites] = React.useState([]);
+
+            const handleSearch = (id, query) => {
+                const searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+                setTabs(tabs.map(tab => tab.id === id ? { ...tab, url: searchUrl } : tab));
+                setSearchHistory([...searchHistory, query]);
+            };
+
+            const addTab = () => {
+                const newTab = { id: Date.now(), url: "" };
+                setTabs([...tabs, newTab]);
+                setActiveTab(newTab.id);
+            };
+
+            const closeTab = (id) => {
+                const updatedTabs = tabs.filter(tab => tab.id !== id);
+                setTabs(updatedTabs);
+                if (id === activeTab && updatedTabs.length > 0) {
+                    setActiveTab(updatedTabs[0].id);
+                }
+            };
+
+            const reloadTab = (id) => {
+                setTabs(tabs.map(tab => tab.id === id ? { ...tab, url: tab.url } : tab));
+            };
+
+            const addToFavorites = (url) => {
+                if (!favorites.includes(url)) {
+                    setFavorites([...favorites, url]);
+                }
+            };
+
+            return (
+                <div className="flex flex-col h-full">
+                    <div className="bg-gray-900 p-2 flex items-center space-x-2">
+                        {tabs.map(tab => (
+                            <div key={tab.id} className={`p-2 rounded-lg cursor-pointer ${tab.id === activeTab ? "tab-active" : ""}`} onClick={() => setActiveTab(tab.id)}>
+                                Tab {tab.id}
+                                <button className="ml-2 text-red-500" onClick={() => closeTab(tab)}>✖</button>
+                            </div>
+                        ))}
+                        <button className="p-2 bg-blue-600 rounded" onClick={addTab}>+ New Tab</button>
+                    </div>
+
+                    <div className="p-4 bg-gray-800 flex">
+                        <input type="text" placeholder="Search..." className="flex-1 p-2 rounded bg-gray-700 text-white" 
+                               onKeyDown={(e) => e.key === 'Enter' && handleSearch(activeTab, e.target.value)} />
+                        <button className="ml-2 p-2 bg-green-600 rounded" onClick={() => reloadTab(activeTab)}>🔄</button>
+                        <button className="ml-2 p-2 bg-yellow-600 rounded" onClick={() => addToFavorites(tabs.find(tab => tab.id === activeTab)?.url)}>⭐</button>
+                        <button className="ml-2 p-2 bg-gray-600 rounded">⋮</button>
+                    </div>
+
+                    <div className="flex-1 p-4 bg-gray-700 overflow-auto">
+                        {tabs.map(tab => (
+                            tab.id === activeTab && tab.url ? 
+                            <iframe key={tab.id} src={tab.url} className="w-full h-full rounded" title={`Tab ${tab.id}`}></iframe> : null
+                        ))}
+                    </div>
+
+                    <div className="bg-gray-900 p-2">
+                        <h3 className="text-lg">Search History</h3>
+                        <ul className="text-sm">
+                            {searchHistory.map((query, index) => (
+                                <li key={index} className="text-gray-400">{query}</li>
+                            ))}
+                        </ul>
+                        <h3 className="text-lg mt-2">Favorites</h3>
+                        <ul className="text-sm">
+                            {favorites.map((fav, index) => (
+                                <li key={index} className="text-yellow-400">{fav}</li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
