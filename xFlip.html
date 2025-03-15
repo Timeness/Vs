@@ -13,12 +13,12 @@
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen">
+<body class="bg-gray-900 text-white flex flex-col items-center min-h-screen">
 
-    <!-- Header -->
-    <header class="w-full bg-gray-800 py-4 shadow-lg">
-        <div class="container mx-auto flex justify-between items-center px-6">
-            <h1 class="text-2xl font-bold text-green-400 flex items-center">
+    <!-- Fixed Header -->
+    <header class="w-full bg-gray-800 py-3 shadow-lg fixed top-0 left-0 z-50">
+        <div class="container mx-auto flex justify-between items-center px-6 text-sm">
+            <h1 class="text-xl font-bold text-green-400 flex items-center">
                 <i data-feather="zap" class="mr-2 text-yellow-400"></i>xFlip Testnet
             </h1>
             <nav>
@@ -32,26 +32,29 @@
     </header>
 
     <!-- Main Content -->
-    <div class="text-center mt-12">
-        <h2 class="text-4xl font-bold mb-4">Hold to Earn xFlip Points</h2>
-        <p class="text-lg mb-6">Keep this page open and earn xFlip points automatically!</p>
-        <div class="bg-gray-800 p-6 rounded-lg shadow-md">
-            <h3 class="text-2xl font-semibold">Your xFlip Points:</h3>
-            <p id="points" class="text-3xl font-bold text-green-400">0</p>
+    <div class="text-center mt-20">
+        <h2 class="text-3xl font-bold mb-4">Hold to Earn xFlip Points</h2>
+        <p class="text-sm mb-6">Keep this page open and earn xFlip points automatically!</p>
+        <div class="bg-gray-800 p-5 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold">Your xFlip Points:</h3>
+            <p id="points" class="text-2xl font-bold text-green-400">0.00000</p>
         </div>
     </div>
 
     <script>
-        feather.replace();
+        feather.replace(); // Load icons
 
-        let points = localStorage.getItem("xFlipPoints") || 0;
-        document.getElementById("points").textContent = points;
+        let points = parseFloat(localStorage.getItem("xFlipPoints")) || 0.00010;
+        const increment = 0.00002;
+        const display = document.getElementById("points");
 
-        setInterval(() => {
-            points++;
-            localStorage.setItem("xFlipPoints", points);
-            document.getElementById("points").textContent = points;
-        }, 1000);
+        function updatePoints() {
+            points += increment;
+            localStorage.setItem("xFlipPoints", points.toFixed(5));
+            display.textContent = points.toFixed(5);
+        }
+
+        setInterval(updatePoints, 1000);
     </script>
 
 </body>
