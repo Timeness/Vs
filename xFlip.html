@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>xFlip Hold to Earn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Signika:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.1/feather.min.js"></script>
+    <style>
+        body {
+            font-family: 'Signika', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen">
+
+    <!-- Header -->
+    <header class="w-full bg-gray-800 py-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center px-6">
+            <h1 class="text-2xl font-bold text-green-400 flex items-center">
+                <i data-feather="zap" class="mr-2 text-yellow-400"></i>xFlip Testnet
+            </h1>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="#" class="hover:text-green-400">Dashboard</a></li>
+                    <li><a href="#" class="hover:text-green-400">Leaderboard</a></li>
+                    <li><a href="#" class="hover:text-green-400">Wallet</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="text-center mt-12">
+        <h2 class="text-4xl font-bold mb-4">Hold to Earn xFlip Points</h2>
+        <p class="text-lg mb-6">Keep this page open and earn xFlip points automatically!</p>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+            <h3 class="text-2xl font-semibold">Your xFlip Points:</h3>
+            <p id="points" class="text-3xl font-bold text-green-400">0</p>
+        </div>
+    </div>
+
+    <script>
+        feather.replace();
+
+        let points = localStorage.getItem("xFlipPoints") || 0;
+        document.getElementById("points").textContent = points;
+
+        setInterval(() => {
+            points++;
+            localStorage.setItem("xFlipPoints", points);
+            document.getElementById("points").textContent = points;
+        }, 1000);
+    </script>
+
+</body>
+</html>
